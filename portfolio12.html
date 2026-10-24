@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth"><head><script data-bard-client-injected="true">(function(firebaseConfig, initialAuthToken, appId) {
+        window.__firebase_config = firebaseConfig;
+        window.__initial_auth_token = initialAuthToken;
+        window.__app_id = appId;
+            })("\n{\n  \"apiKey\": \"AIzaSyCqyCcs2R2e7AegGjvFAwG98wlamtbHvZY\",\n  \"authDomain\": \"bard-frontend.firebaseapp.com\",\n  \"projectId\": \"bard-frontend\",\n  \"storageBucket\": \"bard-frontend.firebasestorage.app\",\n  \"messagingSenderId\": \"175205271074\",\n  \"appId\": \"1:175205271074:web:2b7bd4d34d33bf38e6ec7b\"\n}\n","eyJhbGciOiJSUzI1NiIsImtpZCI6IjExNjRiNzdiNDMzZDdhMDAyMWI4NjE4YjhjYTU3ZTMyZGI5MWUxMTMiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJmaXJlYmFzZS1hZG1pbnNkay1mYnN2Y0BiYXJkLWZyb250ZW5kLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwiYXVkIjoiaHR0cHM6Ly9pZGVudGl0eXRvb2xraXQuZ29vZ2xlYXBpcy5jb20vZ29vZ2xlLmlkZW50aXR5LmlkZW50aXR5dG9vbGtpdC52MS5JZGVudGl0eVRvb2xraXQiLCJ1aWQiOiIxNzkxNTkzMjQ2MDY2NTk1ODAwMyIsImlzcyI6ImZpcmViYXNlLWFkbWluc2RrLWZic3ZjQGJhcmQtZnJvbnRlbmQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJjbGFpbXMiOnsiYXBwSWQiOiJjX2UyNDgzMWY3ZTdmODRhYWJfaW5kZXguaHRtbC04MDUifSwiZXhwIjoxNzkyODMwMDUyLCJpYXQiOjE3OTI4MjY0NTIsImFsZyI6IlJTMjU2In0.AhGq6SRtrjiZnfzwKXiTtTLjEVigl5wMpeXzU4u1eWH1FWnXX-TZinx_gVWkn79Ftlu4BeqPB54Nx4eSI0AlIHkJY3J77xFuNAz34g9geE-Ju_vFYErjbVwSGCvxOTOIQxfDqGr-97W4WwqLgLC__sGdv5NScbeXnz_xpyrLRg6Vu1ilsDjX5w20AUXG9c_bDmQb5G-zBq66QjEWJ5rH6cRTv7DX6KpoB7OW8O66-6hVBUe2xc3UIzx75g8D-GiuS1zCfImDs5T8TOnO8goYLPMZi7n5tl2nHR2piX4ggJrAZDUFViDVwAu8qgT-3RF9B4x_Lmj74tj_1HgOnA9eaw","c_e24831f7e7f84aab_index.html-805")</script><script data-bard-client-injected="true">
+  document.addEventListener('input', (event) => {
+    if (event.target && (event.target.isContentEditable || event.target.hasAttribute('contenteditable'))) {
+      const clonedDoc = document.cloneNode(true);
+      const injectedScripts = clonedDoc.querySelectorAll('[data-bard-client-injected="true"]');
+      injectedScripts.forEach(el => el.remove());
+      window.parent.postMessage({
+        type: 'inlineEdit',
+        html: '<!DOCTYPE html>\n' + clonedDoc.documentElement.outerHTML
+      }, '*');
+    }
+  });
+</script><script data-bard-client-injected="true">(function(){'use strict';window.addEventListener("message",a=>{a.data&&a.data.type==="SUPPLEMENTAL_DATA_UPDATE"&&window.dispatchEvent(new CustomEvent("supplementaldataupdate",{detail:a.data.data}))});}).call(this);
+</script><script data-bard-client-injected="true">(function() {
+  const SCROLL_KEYS = new Set([
+    'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
+    ' ', 'Spacebar', 'PageUp', 'PageDown', 'Home', 'End',
+  ]);
+  const HORIZONTAL_KEYS = new Set(['ArrowLeft', 'ArrowRight']);
+
+  function isTextEntryTarget(target) {
+    if (!target) return false;
+    const tagName = target.tagName;
+    return tagName === 'INPUT' || tagName === 'TEXTAREA' ||
+        tagName === 'SELECT' || target.isContentEditable === true;
+  }
+
+  function canScroll(node, horizontal) {
+    const overflows = horizontal ? node.scrollWidth > node.clientWidth
+                                 : node.scrollHeight > node.clientHeight;
+    if (!overflows) return false;
+    const style = window.getComputedStyle(node);
+    const overflow = horizontal ? style.overflowX : style.overflowY;
+    return overflow === 'auto' || overflow === 'scroll';
+  }
+
+  function hasScrollableAncestor(target, horizontal) {
+    let node = target;
+    while (node && node !== document.documentElement) {
+      if (canScroll(node, horizontal)) return true;
+      node = node.parentElement;
+    }
+    return false;
+  }
+
+  function rootCanScroll(horizontal) {
+    const scroller = document.scrollingElement || document.documentElement;
+    if (!scroller) return false;
+    return horizontal ? scroller.scrollWidth > window.innerWidth + 1
+                      : scroller.scrollHeight > window.innerHeight + 1;
+  }
+
+  window.addEventListener('keydown', function(event) {
+    if (!SCROLL_KEYS.has(event.key)) return;
+    if (event.defaultPrevented) return;
+    if (event.altKey || event.metaKey || event.ctrlKey) return;
+
+    const target = event.target;
+    if (isTextEntryTarget(target)) return;
+
+    const horizontal = HORIZONTAL_KEYS.has(event.key);
+    if (rootCanScroll(horizontal)) return;
+    if (hasScrollableAncestor(target, horizontal)) return;
+
+    event.preventDefault();
+  }, {capture: true, passive: false});
+})();</script><script data-bard-client-injected="true">(function() {
+  if (window.firebaseAuthBridgeScriptLoaded) {
+    return;
+  }
+  window.firebaseAuthBridgeScriptLoaded = true;
+
+  let nextTokenPromiseId = 0;
+  const pendingTokenPromises = {};
+
+  window.addEventListener('message', function(event) {
+    const messageData = event.data;
+    if (messageData && messageData.type === 'RESOLVE_NEW_FIREBASE_TOKEN') {
+      const { success, token, error, promiseId } = messageData ?? {};
+      if (pendingTokenPromises[promiseId]) {
+        if (success) {
+          pendingTokenPromises[promiseId].resolve(token);
+        } else {
+          pendingTokenPromises[promiseId].reject(new Error(error || 'Token refresh failed from host.'));
+        }
+        delete pendingTokenPromises[promiseId];
+      }
+    }
+  });
+
+  window.requestNewFirebaseToken = function() {
+    const currentPromiseId = nextTokenPromiseId++;
+    const promise = new Promise((resolve, reject) => {
+      pendingTokenPromises[currentPromiseId] = { resolve, reject };
+    });
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({
+        type: 'REQUEST_NEW_FIREBASE_TOKEN',
+        promiseId: currentPromiseId
+      }, '*');
+    } else {
+      pendingTokenPromises[currentPromiseId].reject(new Error('No parent window to request token from.'));
+      delete pendingTokenPromises[currentPromiseId];
+    }
+    return promise;
+  };
+})();</script><script data-bard-client-injected="true">
+let realOriginalGetUserMedia = null;
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+  realOriginalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+}
+
+(function() {
+  if (navigator.mediaDevices && navigator.mediaDevices.__proto__) {
+    try {
+      Object.defineProperty(navigator.mediaDevices.__proto__, 'getUserMedia', {
+        get: function() {
+          return undefined;
+        },
+        configurable: false
+      });
+    } catch (error) {
+      console.error("Error defining prototype getter:", error);
+    }
+  }
+})();
+
+(function() {
+  const pendingMediaResolvers = {};
+  let nextMediaPromiseId = 0;
+
+  function requestMediaPermissions(constraints) {
+    const mediaPromiseId = nextMediaPromiseId++;
+    const promise = new Promise((resolve, reject) => {
+      pendingMediaResolvers[mediaPromiseId] = (granted) => {
+        delete pendingMediaResolvers[mediaPromiseId];
+        resolve(granted);
+      };
+    });
+
+    window.parent.postMessage({
+      type: 'requestMediaPermission',
+      constraints: constraints,
+      promiseId: mediaPromiseId,
+    }, '*');
+
+    return promise;
+  }
+
+  let originalGetUserMedia = realOriginalGetUserMedia;
+
+  function interceptGetUserMedia() {
+    if (navigator.mediaDevices) {
+      Object.defineProperty(navigator.mediaDevices, 'getUserMedia', {
+        value: function(constraints) {
+          return requestMediaPermissions(constraints).then((granted) => {
+            if (granted) {
+              if (originalGetUserMedia) {
+                return originalGetUserMedia(constraints);
+              } else {
+                throw new Error("Original getUserMedia not available.");
+              }
+            } else {
+              throw new DOMException('Permission denied', 'NotAllowedError');
+            }
+          });
+        },
+        writable: false,
+        configurable: false
+      });
+    }
+  }
+
+  interceptGetUserMedia();
+
+  function interceptSpeechRecognition() {
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+      return;
+    }
+
+    const OriginalSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    const SpeechRecognitionWrapper = function(...args) {
+      const recognizer = new OriginalSpeechRecognition(...args);
+      const originalStart = recognizer.start.bind(recognizer);
+
+      recognizer.start = function() {
+        requestMediaPermissions({ audio: true }).then(granted => {
+          if (granted) {
+            originalStart();
+          } else {
+            const errorEvent = new SpeechRecognitionErrorEvent('error');
+            errorEvent.error = 'not-allowed';
+            recognizer.dispatchEvent(errorEvent);
+          }
+        });
+      };
+
+      return recognizer;
+    };
+
+    SpeechRecognitionWrapper.prototype = OriginalSpeechRecognition.prototype;
+    SpeechRecognitionWrapper.prototype.constructor = SpeechRecognitionWrapper;
+
+    if (window.SpeechRecognition) {
+      window.SpeechRecognition = SpeechRecognitionWrapper;
+    }
+    if (window.webkitSpeechRecognition) {
+      window.webkitSpeechRecognition = SpeechRecognitionWrapper;
+    }
+  }
+
+  interceptSpeechRecognition();
+
+  window.addEventListener('message', function(event) {
+    if (event.data) {
+      if (event.data.type === 'resolveMediaPermission') {
+        const { promiseId, granted } = event.data;
+        if (pendingMediaResolvers[promiseId]) {
+          pendingMediaResolvers[promiseId](granted);
+        }
+      }
+    }
+  });
+
+})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Sciences Student Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: 'var(--brand-50, #f3f7f4)',
+                            100: 'var(--brand-100, #e2ece5)',
+                            200: 'var(--brand-200, #c7dbce)',
+                            400: 'var(--brand-400, #60967a)',
+                            500: 'var(--brand-500, #417b5e)',
+                            600: 'var(--brand-600, #31624a)',
+                            700: 'var(--brand-700, #264e3b)',
+                            800: 'var(--brand-800, #1f3f30)',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --brand-50: #f3f7f4;
+            --brand-100: #e2ece5;
+            --brand-200: #c7dbce;
+            --brand-400: #60967a;
+            --brand-500: #417b5e;
+            --brand-600: #31624a;
+            --brand-700: #264e3b;
+            --brand-800: #1f3f30;
+        }
+
+        /* Earthy Theme Presets */
+        body[data-palette="sage"] {
+            --brand-50: #f3f7f4;
+            --brand-100: #e2ece5;
+            --brand-200: #c7dbce;
+            --brand-400: #60967a;
+            --brand-500: #417b5e;
+            --brand-600: #31624a;
+            --brand-700: #264e3b;
+        }
+        body[data-palette="olive"] {
+            --brand-50: #f6f7f0;
+            --brand-100: #eaeecd;
+            --brand-200: #d6dda2;
+            --brand-400: #889647;
+            --brand-500: #6d7b32;
+            --brand-600: #556223;
+            --brand-700: #424e18;
+        }
+        body[data-palette="moss"] {
+            --brand-50: #f2f6f2;
+            --brand-100: #e0ece0;
+            --brand-200: #bfd8bf;
+            --brand-400: #548b59;
+            --brand-500: #3a6f40;
+            --brand-600: #29552f;
+            --brand-700: #1f4224;
+        }
+        body[data-palette="terracotta"] {
+            --brand-50: #faf4f1;
+            --brand-100: #f3e6e0;
+            --brand-200: #e6cbbe;
+            --brand-400: #af6b53;
+            --brand-500: #934e38;
+            --brand-600: #7c3e2b;
+            --brand-700: #633020;
+        }
+
+        /* Smooth reveal animations */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+            will-change: opacity, transform;
+        }
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered delay helpers */
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* Gentle botanical pulse & float animations */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-7px) rotate(1.5deg); }
+        }
+        @keyframes floatBadge {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+        }
+        @keyframes gentleGlow {
+            0%, 100% { box-shadow: 0 4px 20px -2px rgba(65, 123, 94, 0.15); }
+            50% { box-shadow: 0 8px 25px 2px rgba(65, 123, 94, 0.28); }
+        }
+
+        .animate-float-slow {
+            animation: floatSlow 6s ease-in-out infinite;
+        }
+        .animate-float-badge {
+            animation: floatBadge 3.5s ease-in-out infinite;
+        }
+        .animate-glow-soft {
+            animation: gentleGlow 4s ease-in-out infinite;
+        }
+
+        /* Card interactive hover physics */
+        .interactive-card {
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.25s ease;
+        }
+        .interactive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 30px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--brand-400);
+        }
+        .dark .interactive-card:hover {
+            box-shadow: 0 16px 30px -10px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--brand-400);
+        }
+
+        /* Visual edit styling */
+        .editable {
+            transition: background 0.15s ease, box-shadow 0.15s ease;
+            outline: none;
+            border-radius: 4px;
+        }
+        body.edit-mode .editable:hover {
+            background-color: rgba(65, 123, 94, 0.08);
+            box-shadow: 0 0 0 1.5px rgba(65, 123, 94, 0.4);
+        }
+        body.edit-mode .editable:focus {
+            background-color: rgba(65, 123, 94, 0.12);
+            box-shadow: 0 0 0 2px var(--brand-600);
+        }
+        .dark.edit-mode .editable:hover {
+            background-color: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.25);
+        }
+        .dark.edit-mode .editable:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 2px var(--brand-400);
+        }
+
+        /* Hide edit helper badges in preview mode */
+        body:not(.edit-mode) .edit-only {
+            display: none !important;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Background Spores Canvas */
+        #botanical-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.55;
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.-left-\[31px\]{left:-31px}.bottom-2{bottom:0.5rem}.bottom-3{bottom:0.75rem}.bottom-4{bottom:1rem}.left-0{left:0px}.left-1\/2{left:50%}.left-2{left:0.5rem}.left-3{left:0.75rem}.right-0{right:0px}.right-2{right:0.5rem}.right-3{right:0.75rem}.right-5{right:1.25rem}.top-0{top:0px}.top-1\.5{top:0.375rem}.top-2{top:0.5rem}.top-3{top:0.75rem}.top-5{top:1.25rem}.z-10{z-index:10}.z-40{z-index:40}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-1\.5{margin-bottom:0.375rem}.mb-16{margin-bottom:4rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.ml-4{margin-left:1rem}.mt-0\.5{margin-top:0.125rem}.mt-1{margin-top:0.25rem}.mt-3{margin-top:0.75rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-16{height:4rem}.h-3{height:0.75rem}.h-3\.5{height:0.875rem}.h-4{height:1rem}.h-44{height:11rem}.h-5{height:1.25rem}.h-64{height:16rem}.h-7{height:1.75rem}.h-8{height:2rem}.h-9{height:2.25rem}.h-full{height:100%}.w-3{width:0.75rem}.w-3\.5{width:0.875rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-56{width:14rem}.w-7{width:1.75rem}.w-8{width:2rem}.w-9{width:2.25rem}.w-\[95\%\]{width:95%}.w-fit{width:-moz-fit-content;width:fit-content}.w-full{width:100%}.max-w-3xl{max-width:48rem}.max-w-5xl{max-width:64rem}.max-w-sm{max-width:24rem}.shrink-0{flex-shrink:0}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-20{--tw-translate-y:-5rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-y-0{--tw-translate-y:0px;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.resize-none{resize:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-col-reverse{flex-direction:column-reverse}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-10{gap:2.5rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-y-24 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(6rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(6rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.25rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.scroll-smooth{scroll-behavior:smooth}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-0{border-width:0px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-l{border-left-width:1px}.border-l-2{border-left-width:2px}.border-t{border-top-width:1px}.border-brand-200{border-color:var(--brand-200, #c7dbce)}.border-stone-100{--tw-border-opacity:1;border-color:rgb(245 245 244 / var(--tw-border-opacity, 1))}.border-stone-200{--tw-border-opacity:1;border-color:rgb(231 229 228 / var(--tw-border-opacity, 1))}.border-stone-300{--tw-border-opacity:1;border-color:rgb(214 211 209 / var(--tw-border-opacity, 1))}.border-stone-600{--tw-border-opacity:1;border-color:rgb(87 83 78 / var(--tw-border-opacity, 1))}.border-stone-700{--tw-border-opacity:1;border-color:rgb(68 64 60 / var(--tw-border-opacity, 1))}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255 / var(--tw-border-opacity, 1))}.bg-\[\#29552f\]{--tw-bg-opacity:1;background-color:rgb(41 85 47 / var(--tw-bg-opacity, 1))}.bg-\[\#31624a\]{--tw-bg-opacity:1;background-color:rgb(49 98 74 / var(--tw-bg-opacity, 1))}.bg-\[\#556223\]{--tw-bg-opacity:1;background-color:rgb(85 98 35 / var(--tw-bg-opacity, 1))}.bg-\[\#7c3e2b\]{--tw-bg-opacity:1;background-color:rgb(124 62 43 / var(--tw-bg-opacity, 1))}.bg-\[\#faf8f5\]{--tw-bg-opacity:1;background-color:rgb(250 248 245 / var(--tw-bg-opacity, 1))}.bg-\[\#faf8f5\]\/90{background-color:rgb(250 248 245 / 0.9)}.bg-black\/70{background-color:rgb(0 0 0 / 0.7)}.bg-brand-50{background-color:var(--brand-50, #f3f7f4)}.bg-brand-600{background-color:var(--brand-600, #31624a)}.bg-stone-100{--tw-bg-opacity:1;background-color:rgb(245 245 244 / var(--tw-bg-opacity, 1))}.bg-stone-200{--tw-bg-opacity:1;background-color:rgb(231 229 228 / var(--tw-bg-opacity, 1))}.bg-stone-300{--tw-bg-opacity:1;background-color:rgb(214 211 209 / var(--tw-bg-opacity, 1))}.bg-stone-50{--tw-bg-opacity:1;background-color:rgb(250 250 249 / var(--tw-bg-opacity, 1))}.bg-stone-800{--tw-bg-opacity:1;background-color:rgb(41 37 36 / var(--tw-bg-opacity, 1))}.bg-stone-900{--tw-bg-opacity:1;background-color:rgb(28 25 23 / var(--tw-bg-opacity, 1))}.bg-stone-900\/80{background-color:rgb(28 25 23 / 0.8)}.bg-stone-900\/90{background-color:rgb(28 25 23 / 0.9)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/95{background-color:rgb(255 255 255 / 0.95)}.object-cover{object-fit:cover}.p-2{padding:0.5rem}.p-2\.5{padding:0.625rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.pb-32{padding-bottom:8rem}.pb-5{padding-bottom:1.25rem}.pl-1{padding-left:0.25rem}.pl-6{padding-left:1.5rem}.pt-2{padding-top:0.5rem}.pt-28{padding-top:7rem}.pt-3{padding-top:0.75rem}.pt-4{padding-top:1rem}.font-sans{font-family:Inter, sans-serif}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-base{font-size:1rem;line-height:1.5rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.tracking-tight{letter-spacing:-0.025em}.tracking-wider{letter-spacing:0.05em}.text-brand-400{color:var(--brand-400, #60967a)}.text-brand-600{color:var(--brand-600, #31624a)}.text-brand-700{color:var(--brand-700, #264e3b)}.text-stone-100{--tw-text-opacity:1;color:rgb(245 245 244 / var(--tw-text-opacity, 1))}.text-stone-200{--tw-text-opacity:1;color:rgb(231 229 228 / var(--tw-text-opacity, 1))}.text-stone-400{--tw-text-opacity:1;color:rgb(168 162 158 / var(--tw-text-opacity, 1))}.text-stone-50{--tw-text-opacity:1;color:rgb(250 250 249 / var(--tw-text-opacity, 1))}.text-stone-500{--tw-text-opacity:1;color:rgb(120 113 108 / var(--tw-text-opacity, 1))}.text-stone-600{--tw-text-opacity:1;color:rgb(87 83 78 / var(--tw-text-opacity, 1))}.text-stone-700{--tw-text-opacity:1;color:rgb(68 64 60 / var(--tw-text-opacity, 1))}.text-stone-800{--tw-text-opacity:1;color:rgb(41 37 36 / var(--tw-text-opacity, 1))}.text-stone-900{--tw-text-opacity:1;color:rgb(28 25 23 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.opacity-0{opacity:0}.opacity-100{opacity:1}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.outline-none{outline:2px solid transparent;outline-offset:2px}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-transparent{--tw-ring-color:transparent}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.delay-100{transition-delay:100ms}.delay-200{transition-delay:200ms}.delay-300{transition-delay:300ms}.duration-300{transition-duration:300ms}.duration-500{transition-duration:500ms}.duration-700{transition-duration:700ms}.ease-out{transition-timing-function:cubic-bezier(0, 0, 0.2, 1)}.selection\:bg-brand-600 *::selection{background-color:var(--brand-600, #31624a)}.selection\:text-white *::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.selection\:bg-brand-600::selection{background-color:var(--brand-600, #31624a)}.selection\:text-white::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:-translate-y-0\.5:hover{--tw-translate-y:-0.125rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:translate-x-1:hover{--tw-translate-x:0.25rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:border-brand-500:hover{border-color:var(--brand-500, #417b5e)}.hover\:bg-brand-100:hover{background-color:var(--brand-100, #e2ece5)}.hover\:bg-brand-500:hover{background-color:var(--brand-500, #417b5e)}.hover\:bg-brand-700:hover{background-color:var(--brand-700, #264e3b)}.hover\:bg-stone-200:hover{--tw-bg-opacity:1;background-color:rgb(231 229 228 / var(--tw-bg-opacity, 1))}.hover\:bg-stone-200\/50:hover{background-color:rgb(231 229 228 / 0.5)}.hover\:bg-stone-700:hover{--tw-bg-opacity:1;background-color:rgb(68 64 60 / var(--tw-bg-opacity, 1))}.hover\:bg-stone-800:hover{--tw-bg-opacity:1;background-color:rgb(41 37 36 / var(--tw-bg-opacity, 1))}.hover\:text-brand-600:hover{color:var(--brand-600, #31624a)}.hover\:text-red-400:hover{--tw-text-opacity:1;color:rgb(248 113 113 / var(--tw-text-opacity, 1))}.hover\:text-red-500:hover{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.hover\:text-stone-200:hover{--tw-text-opacity:1;color:rgb(231 229 228 / var(--tw-text-opacity, 1))}.hover\:underline:hover{-webkit-text-decoration-line:underline;text-decoration-line:underline}.hover\:shadow-md:hover{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.hover\:ring-white:hover{--tw-ring-opacity:1;--tw-ring-color:rgb(255 255 255 / var(--tw-ring-opacity, 1))}.focus\:border-brand-600:focus{border-color:var(--brand-600, #31624a)}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.active\:translate-y-0:active{--tw-translate-y:0px;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.active\:rotate-45:active{--tw-rotate:45deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.active\:scale-95:active{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:-translate-y-1{--tw-translate-y:-0.25rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:rotate-12{--tw-rotate:12deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:scale-105{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:scale-110{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:scale-125{--tw-scale-x:1.25;--tw-scale-y:1.25;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:text-brand-600{color:var(--brand-600, #31624a)}.dark\:border-brand-800:is(.dark *){border-color:var(--brand-800, #1f3f30)}.dark\:border-stone-700:is(.dark *){--tw-border-opacity:1;border-color:rgb(68 64 60 / var(--tw-border-opacity, 1))}.dark\:border-stone-800:is(.dark *){--tw-border-opacity:1;border-color:rgb(41 37 36 / var(--tw-border-opacity, 1))}.dark\:border-stone-900:is(.dark *){--tw-border-opacity:1;border-color:rgb(28 25 23 / var(--tw-border-opacity, 1))}.dark\:bg-stone-700:is(.dark *){--tw-bg-opacity:1;background-color:rgb(68 64 60 / var(--tw-bg-opacity, 1))}.dark\:bg-stone-800:is(.dark *){--tw-bg-opacity:1;background-color:rgb(41 37 36 / var(--tw-bg-opacity, 1))}.dark\:bg-stone-900:is(.dark *){--tw-bg-opacity:1;background-color:rgb(28 25 23 / var(--tw-bg-opacity, 1))}.dark\:bg-stone-900\/95:is(.dark *){background-color:rgb(28 25 23 / 0.95)}.dark\:bg-stone-950:is(.dark *){--tw-bg-opacity:1;background-color:rgb(12 10 9 / var(--tw-bg-opacity, 1))}.dark\:bg-stone-950\/90:is(.dark *){background-color:rgb(12 10 9 / 0.9)}.dark\:text-brand-400:is(.dark *){color:var(--brand-400, #60967a)}.dark\:text-stone-100:is(.dark *){--tw-text-opacity:1;color:rgb(245 245 244 / var(--tw-text-opacity, 1))}.dark\:text-stone-300:is(.dark *){--tw-text-opacity:1;color:rgb(214 211 209 / var(--tw-text-opacity, 1))}.dark\:text-stone-400:is(.dark *){--tw-text-opacity:1;color:rgb(168 162 158 / var(--tw-text-opacity, 1))}.dark\:text-white:is(.dark *){--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.dark\:hover\:bg-stone-700:hover:is(.dark *){--tw-bg-opacity:1;background-color:rgb(68 64 60 / var(--tw-bg-opacity, 1))}.dark\:hover\:bg-stone-800:hover:is(.dark *){--tw-bg-opacity:1;background-color:rgb(41 37 36 / var(--tw-bg-opacity, 1))}@media (min-width: 640px){.sm\:inline-flex{display:inline-flex}.sm\:h-72{height:18rem}.sm\:w-64{width:16rem}.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:flex-row{flex-direction:row}.sm\:items-end{align-items:flex-end}.sm\:items-center{align-items:center}.sm\:gap-3{gap:0.75rem}.sm\:p-8{padding:2rem}.sm\:px-5{padding-left:1.25rem;padding-right:1.25rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.sm\:text-4xl{font-size:2.25rem;line-height:2.5rem}.sm\:text-base{font-size:1rem;line-height:1.5rem}}@media (min-width: 768px){.md\:inline{display:inline}.md\:flex{display:flex}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:col-span-5{grid-column:span 5 / span 5}.lg\:col-span-7{grid-column:span 7 / span 7}.lg\:w-3\/5{width:60%}.lg\:w-72{width:18rem}.lg\:grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:flex-row{flex-direction:row}.lg\:text-5xl{font-size:3rem;line-height:1}}</style></head>
+<body data-palette="terracotta" class="bg-[#faf8f5] text-stone-800 dark:bg-stone-950 dark:text-stone-100 font-sans antialiased transition-colors duration-300 selection:bg-brand-600 selection:text-white relative">
+
+    <!-- Ambient Spores Particle Background Canvas -->
+    <canvas id="botanical-canvas" width="948" height="828"></canvas>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed top-5 right-5 z-50 transform transition-all duration-300 pointer-events-none flex items-center gap-3 bg-stone-900 text-stone-50 px-4 py-2.5 rounded-xl shadow-lg border border-stone-700 text-xs -translate-y-20 opacity-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="check" aria-hidden="true" class="lucide lucide-check w-4 h-4 text-brand-400"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span id="toast-message">Applied Terracotta natural theme</span>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 right-0 z-40 glass-nav bg-[#faf8f5]/90 dark:bg-stone-950/90 border-b border-stone-200 dark:border-stone-800 transition-colors">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2 text-stone-900 dark:text-stone-100 font-bold group">
+                <span class="w-7 h-7 rounded-lg bg-brand-600 text-white flex items-center justify-center text-xs group-hover:rotate-12 transition-transform duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="leaf" aria-hidden="true" class="lucide lucide-leaf w-4 h-4"><path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20"></path><path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13"></path></svg>
+                </span>
+                <span class="editable" id="nav-brand-name">Your Name</span>
+                <span class="text-xs font-normal text-stone-500 editable" id="nav-brand-title">| Biologist</span>
+            </a>
+
+            <!-- Desktop Links -->
+            <nav class="hidden md:flex items-center gap-6 text-xs font-medium text-stone-600 dark:text-stone-300">
+                <a href="#about" class="hover:text-brand-600 transition-colors">About</a>
+                <a href="#competencies" class="hover:text-brand-600 transition-colors">Skills</a>
+                <a href="#coursework-projects" class="hover:text-brand-600 transition-colors">Coursework</a>
+                <a href="#activities" class="hover:text-brand-600 transition-colors">Activities</a>
+                <a href="#experience" class="hover:text-brand-600 transition-colors">Experience</a>
+                <a href="#contact" class="hover:text-brand-600 transition-colors">Contact</a>
+            </nav>
+
+            <div class="flex items-center gap-2">
+                <button id="theme-toggle" class="p-2 rounded-xl text-stone-600 dark:text-stone-300 hover:bg-stone-200/50 dark:hover:bg-stone-800 active:rotate-45 transition-transform" title="Toggle Theme">
+                    <span id="theme-icon-light" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-amber-400"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+                    </span>
+                    <span id="theme-icon-dark" style="display: block;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-stone-700 dark:text-stone-300"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path></svg>
+                    </span>
+                </button>
+                <a href="#contact" class="hidden sm:inline-flex items-center px-3.5 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-medium transition-all hover:shadow-md hover:-translate-y-0.5">
+                    Contact
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-28 pb-32 space-y-24">
+
+        <!-- HERO SECTION -->
+        <section id="about" class="reveal-on-scroll flex flex-col-reverse lg:flex-row items-center justify-between gap-10 is-visible">
+            <!-- Left Info -->
+            <div class="w-full lg:w-3/5 space-y-5">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100/70 dark:bg-brand-900/30 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-medium animate-float-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="graduation-cap" aria-hidden="true" class="lucide lucide-graduation-cap w-3.5 h-3.5"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg>
+                    <span class="editable" id="hero-tagline">Undergraduate · Life Sciences Student</span>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-stone-900 dark:text-white leading-tight">
+                    <span class="editable" id="hero-greeting">Hi, I'm</span> 
+                    <span class="text-brand-600 dark:text-brand-400 editable" id="hero-name">Your Full Name</span>.
+                </h1>
+
+                <p class="text-stone-600 dark:text-stone-400 text-sm sm:text-base leading-relaxed editable" id="hero-bio">
+                    I am an undergraduate student majoring in Life Sciences / Biological Sciences at [Your College or University]. I am interested in cell biology, ecology, and biochemistry, and I am actively exploring hands-on laboratory techniques, student science clubs, and field biology initiatives.
+                </p>
+
+                <!-- Action CTA -->
+                <div class="flex flex-wrap items-center gap-3 pt-2">
+                    <a href="#coursework-projects" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-xs shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-1.5">
+                        <span class="editable" id="hero-cta-text">View Academic Work</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-down" aria-hidden="true" class="lucide lucide-arrow-down w-3.5 h-3.5"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
+                    </a>
+                    <a href="#activities" class="px-4 py-2.5 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-xs text-stone-700 dark:text-stone-300 font-medium transition-all hover:-translate-y-0.5 flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="users" aria-hidden="true" class="lucide lucide-users w-3.5 h-3.5 text-brand-600"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                        <span>Extracurriculars &amp; Clubs</span>
+                    </a>
+                    <button id="copy-email-btn" class="px-4 py-2.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-brand-500 text-xs text-stone-700 dark:text-stone-300 font-medium transition-all hover:-translate-y-0.5 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="mail" aria-hidden="true" class="lucide lucide-mail w-3.5 h-3.5 text-brand-600"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
+                        <span class="editable" id="hero-email">student.name@university.edu</span>
+                    </button>
+                </div>
+
+                <!-- Custom stats -->
+                <div class="pt-4 grid grid-cols-3 gap-4 border-t border-stone-200 dark:border-stone-800 max-w-sm">
+                    <div class="transition-transform duration-300 hover:translate-x-1">
+                        <p class="text-xl font-bold text-stone-900 dark:text-white editable" id="stat-1-val">Year 2</p>
+                        <p class="text-[11px] text-stone-500 editable" id="stat-1-label">B.Sc. Life Sciences</p>
+                    </div>
+                    <div class="transition-transform duration-300 hover:translate-x-1">
+                        <p class="text-xl font-bold text-stone-900 dark:text-white editable" id="stat-2-val">8+</p>
+                        <p class="text-[11px] text-stone-500 editable" id="stat-2-label">Lab Practicals Completed</p>
+                    </div>
+                    <div class="transition-transform duration-300 hover:translate-x-1">
+                        <p class="text-xl font-bold text-stone-900 dark:text-white editable" id="stat-3-val">3</p>
+                        <p class="text-[11px] text-stone-500 editable" id="stat-3-label">Clubs &amp; Societies</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Profile / Specimen Photo Card with Floating Animation -->
+            <div class="w-full sm:w-64 lg:w-72 flex flex-col items-center">
+                <div class="animate-float-slow animate-glow-soft relative w-56 h-64 sm:w-64 sm:h-72 rounded-2xl overflow-hidden bg-stone-200 dark:bg-stone-800 border border-stone-200 dark:border-stone-800 shadow-sm group">
+                    <img id="profile-img" src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&amp;fit=crop&amp;w=700&amp;q=80" onerror="this.src='https://placehold.co/600x700/31624a/ffffff?text=Student+Photo'" alt="Student profile" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
+                    <div class="absolute bottom-3 left-3 right-3 glass-nav bg-white/95 dark:bg-stone-900/95 p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 transition-transform duration-300 group-hover:-translate-y-1">
+                        <p class="text-xs font-semibold editable" id="profile-caption-title">Student / Campus Photo</p>
+                        <p class="text-[10px] text-stone-500 editable" id="profile-caption-sub">Department of Life Sciences</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STUDENT SKILLS & LAB TECHNIQUES -->
+        <section id="competencies" class="reveal-on-scroll space-y-6 is-visible">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400 editable">Academic Toolkit</h2>
+                    <h3 class="text-2xl font-bold text-stone-900 dark:text-white editable">Core Courses &amp; Practical Skills</h3>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="competencies-container">
+                <!-- Competency 1 -->
+                <div class="interactive-card reveal-on-scroll delay-100 p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative group is-visible">
+                    <div class="w-8 h-8 rounded-lg bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="microscope" aria-hidden="true" class="lucide lucide-microscope w-4 h-4"><path d="M6 18h8"></path><path d="M3 22h18"></path><path d="M14 22a7 7 0 1 0 0-14h-1"></path><path d="M9 14h2"></path><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"></path><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path></svg>
+                    </div>
+                    <h4 class="text-sm font-bold editable">Undergrad Lab Practicals</h4>
+                    <p class="text-xs text-stone-500 dark:text-stone-400 mt-1 mb-3 editable">Hands-on coursework techniques practiced in weekly college lab sessions.</p>
+                    <div class="flex flex-wrap gap-1.5 tags-list">
+                        <span class="editable px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Compound Microscopy</span>
+                        <span class="editable px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Gram Staining</span>
+                        <span class="editable px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Pipetting &amp; Serial Dilution</span>
+                        <span class="editable px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Agar Plate Inoculation</span>
+                    </div>
+                </div>
+
+                <!-- Competency 2 -->
+                <div class="interactive-card reveal-on-scroll delay-200 p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative group is-visible">
+                    <div class="w-8 h-8 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="book-open" aria-hidden="true" class="lucide lucide-book-open w-4 h-4"><path d="M12 5v16"></path><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"></path></svg>
+                    </div>
+                    <h4 class="text-sm font-bold editable">Key Course Modules</h4>
+                    <p class="text-xs text-stone-500 dark:text-stone-400 mt-1 mb-3 editable">Core lecture subjects studied in the Life Sciences curriculum.</p>
+                    <div class="flex flex-wrap gap-1.5 tags-list">
+                        <span class="editable px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">General Genetics</span>
+                        <span class="editable px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Plant &amp; Animal Physiology</span>
+                        <span class="editable px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Ecology &amp; Evolution</span>
+                        <span class="editable px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Introductory Biochemistry</span>
+                    </div>
+                </div>
+
+                <!-- Competency 3 -->
+                <div class="interactive-card reveal-on-scroll delay-300 p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative group is-visible">
+                    <div class="w-8 h-8 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="laptop" aria-hidden="true" class="lucide lucide-laptop w-4 h-4"><path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z"></path><path d="M20.054 15.987H3.946"></path></svg>
+                    </div>
+                    <h4 class="text-sm font-bold editable">Software &amp; Analysis</h4>
+                    <p class="text-xs text-stone-500 dark:text-stone-400 mt-1 mb-3 editable">Tools used for lab report preparation, data plotting, and presentations.</p>
+                    <div class="flex flex-wrap gap-1.5 tags-list">
+                        <span class="editable px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Excel (Graphing &amp; Stats)</span>
+                        <span class="editable px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">NCBI / PubMed Searching</span>
+                        <span class="editable px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Lab Notebook Documentation</span>
+                        <span class="editable px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Scientific Presentations</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COURSEWORK, LAB PRACTICALS & CLASS PROJECTS -->
+        <section id="coursework-projects" class="reveal-on-scroll space-y-6 is-visible">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+                <div>
+                    <h2 class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400 editable">Studies</h2>
+                    <h3 class="text-2xl font-bold text-stone-900 dark:text-white editable">Coursework &amp; Lab Experiments</h3>
+                </div>
+            </div>
+
+            <!-- Dynamic Project Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="projects-grid">
+
+                <!-- Card 1 -->
+                <article class="project-card interactive-card reveal-on-scroll delay-100 group rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 overflow-hidden flex flex-col justify-between shadow-sm relative is-visible">
+                    <div>
+                        <div class="relative h-44 overflow-hidden bg-stone-100 dark:bg-stone-800">
+                            <img src="https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&amp;fit=crop&amp;w=700&amp;q=80" onerror="this.src='https://placehold.co/600x400/31624a/ffffff?text=Lab+Practical'" alt="Practical experiment" class="w-full h-full object-cover card-img transition-transform duration-500 ease-out group-hover:scale-105">
+                        </div>
+                        <div class="p-5">
+                            <p class="text-[11px] text-stone-500 dark:text-stone-400 mb-1 editable">Semester 3 · Botany Practical</p>
+                            <h4 class="text-base font-bold mb-2 group-hover:text-brand-600 transition-colors editable">Plant Tissue Anatomy &amp; Staining</h4>
+                            <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                                Prepared thin cross-sections of monocot and dicot stems, applied Safranin-Fast Green double staining, and documented vascular bundle arrangements under 400x magnification.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-5 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between text-xs">
+                        <span class="text-[11px] text-stone-500 editable">Course Lab Module</span>
+                        <span class="font-semibold text-brand-600 dark:text-brand-400 editable">Grade: A</span>
+                    </div>
+                </article>
+
+                <!-- Card 2 -->
+                <article class="project-card interactive-card reveal-on-scroll delay-200 group rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 overflow-hidden flex flex-col justify-between shadow-sm relative is-visible">
+                    <div>
+                        <div class="relative h-44 overflow-hidden bg-stone-100 dark:bg-stone-800">
+                            <img src="https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&amp;fit=crop&amp;w=700&amp;q=80" onerror="this.src='https://placehold.co/600x400/31624a/ffffff?text=Course+Poster'" alt="Poster assignment" class="w-full h-full object-cover card-img transition-transform duration-500 ease-out group-hover:scale-105">
+                        </div>
+                        <div class="p-5">
+                            <p class="text-[11px] text-stone-500 dark:text-stone-400 mb-1 editable">Semester 2 · Genetics Term Paper</p>
+                            <h4 class="text-base font-bold mb-2 group-hover:text-brand-600 transition-colors editable">Mendelian Ratios in Drosophila</h4>
+                            <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                                Conducted fruit fly sorting for eye color and wing mutations, counted F1/F2 generations, and executed a Chi-square goodness-of-fit test to verify 3:1 phenotypic ratios.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-5 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between text-xs">
+                        <span class="text-[11px] text-stone-500 editable">Genetics Lab Report</span>
+                        <a href="#" class="font-semibold text-brand-600 dark:text-brand-400 hover:underline transition-colors editable">View PDF Report →</a>
+                    </div>
+                </article>
+
+                <!-- Card 3 -->
+                <article class="project-card interactive-card reveal-on-scroll delay-300 group rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 overflow-hidden flex flex-col justify-between shadow-sm relative is-visible">
+                    <div>
+                        <div class="relative h-44 overflow-hidden bg-stone-100 dark:bg-stone-800">
+                            <img src="https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&amp;fit=crop&amp;w=700&amp;q=80" onerror="this.src='https://placehold.co/600x400/31624a/ffffff?text=Field+Trip'" alt="Field excursion" class="w-full h-full object-cover card-img transition-transform duration-500 ease-out group-hover:scale-105">
+                        </div>
+                        <div class="p-5">
+                            <p class="text-[11px] text-stone-500 dark:text-stone-400 mb-1 editable">Semester 1 · Ecology Excursion</p>
+                            <h4 class="text-base font-bold mb-2 group-hover:text-brand-600 transition-colors editable">Pond Water Biodiversity Survey</h4>
+                            <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                                Sampled local freshwater ponds, measured dissolved oxygen and pH, and used dichotomous keys to categorize microinvertebrates including Daphnia, Cyclops, and rotifers.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-5 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between text-xs">
+                        <span class="text-[11px] text-stone-500 editable">Fieldwork Assignment</span>
+                        <a href="#" class="font-semibold text-brand-600 dark:text-brand-400 hover:underline transition-colors editable">View Photo Log →</a>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- STUDENT ACTIVITIES & EXTRACURRICULARS -->
+        <section id="activities" class="reveal-on-scroll space-y-6 is-visible">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400 editable">Campus Life</h2>
+                    <h3 class="text-2xl font-bold text-stone-900 dark:text-white editable">Activities, Clubs &amp; Volunteering</h3>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="activities-container">
+                <!-- Activity 1 -->
+                <div class="activity-card interactive-card reveal-on-scroll delay-100 p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative group is-visible">
+                    <div class="w-9 h-9 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="sprout" aria-hidden="true" class="lucide lucide-sprout w-5 h-5"><path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"></path><path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"></path><path d="M5 21h14"></path></svg>
+                    </div>
+                    <span class="text-[10px] uppercase font-semibold text-brand-600 dark:text-brand-400 tracking-wider editable">Campus Club</span>
+                    <h4 class="text-sm font-bold text-stone-900 dark:text-white mt-0.5 mb-1 editable">Life Sciences Student Society</h4>
+                    <p class="text-xs text-stone-500 dark:text-stone-400 mb-2 editable">Events Coordinator &amp; Active Member</p>
+                    <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                        Helped organize university guest lectures from visiting professors, scheduled museum tours, and arranged peer study circles before final exams.
+                    </p>
+                </div>
+
+                <!-- Activity 2 -->
+                <div class="activity-card interactive-card reveal-on-scroll delay-200 p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative group is-visible">
+                    <div class="w-9 h-9 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="tree-pine" aria-hidden="true" class="lucide lucide-tree-pine w-5 h-5"><path d="m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L12 3l4 4.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.7 1.7H17Z"></path><path d="M12 22v-3"></path></svg>
+                    </div>
+                    <span class="text-[10px] uppercase font-semibold text-brand-600 dark:text-brand-400 tracking-wider editable">Volunteering</span>
+                    <h4 class="text-sm font-bold text-stone-900 dark:text-white mt-0.5 mb-1 editable">Botanical Garden Docent Volunteer</h4>
+                    <p class="text-xs text-stone-500 dark:text-stone-400 mb-2 editable">Weekend Guide · Local Nature Conservatory</p>
+                    <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                        Guided school visitors through medicinal herb collections, explained native plant adaptations, and helped maintain plant nursery beds.
+                    </p>
+                </div>
+
+                <!-- Activity 3 -->
+                <div class="activity-card interactive-card reveal-on-scroll delay-300 p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative group is-visible">
+                    <div class="w-9 h-9 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="award" aria-hidden="true" class="lucide lucide-award w-5 h-5"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg>
+                    </div>
+                    <span class="text-[10px] uppercase font-semibold text-brand-600 dark:text-brand-400 tracking-wider editable">Competition</span>
+                    <h4 class="text-sm font-bold text-stone-900 dark:text-white mt-0.5 mb-1 editable">Annual College Science Exhibition</h4>
+                    <p class="text-xs text-stone-500 dark:text-stone-400 mb-2 editable">Participant · Team Poster Presentation</p>
+                    <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                        Presented a 3D model and interactive demonstration explaining photosynthetic light reactions to high school science students and campus visitors.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- EDUCATION & TIMELINE SECTION -->
+        <section id="experience" class="reveal-on-scroll space-y-6 is-visible">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400 editable">Journey</h2>
+                    <h3 class="text-2xl font-bold text-stone-900 dark:text-white editable">Education &amp; Certifications</h3>
+                </div>
+            </div>
+
+            <div class="relative border-l-2 border-stone-200 dark:border-stone-800 ml-4 space-y-6 pl-6" id="timeline-container">
+                
+                <!-- Entry 1 -->
+                <div class="relative group reveal-on-scroll is-visible">
+                    <span class="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-brand-600 border-2 border-white dark:border-stone-900 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="interactive-card p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1.5">
+                            <h4 class="text-sm font-bold editable">Bachelor of Science in Life Sciences · <span class="text-brand-600 dark:text-brand-400">Your College / University</span></h4>
+                            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-500 w-fit editable">2024 — Present</span>
+                        </div>
+                        <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                            Currently enrolled in undergraduate studies. Relevant subjects: Cell Biology, Ecology, Bioenergetics, and Experimental Biological Methods. Current GPA: [e.g., 3.8 / 4.0].
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Entry 2 -->
+                <div class="relative group reveal-on-scroll delay-100 is-visible">
+                    <span class="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-stone-300 dark:bg-stone-700 border-2 border-white dark:border-stone-900 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="interactive-card p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1.5">
+                            <h4 class="text-sm font-bold editable">High School Diploma (Science Stream) · <span class="text-brand-600 dark:text-brand-400">High School Name</span></h4>
+                            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-500 w-fit editable">Graduated 2024</span>
+                        </div>
+                        <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                            Completed science curriculum with focus on Biology, Chemistry, and Mathematics. Member of the high school Environmental Science Club.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Entry 3 -->
+                <div class="relative group reveal-on-scroll delay-200 is-visible">
+                    <span class="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-stone-300 dark:bg-stone-700 border-2 border-white dark:border-stone-900 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="interactive-card p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1.5">
+                            <h4 class="text-sm font-bold editable">Lab Safety &amp; Biosafety Certification · <span class="text-brand-600 dark:text-brand-400">Institutional Biosafety Committee</span></h4>
+                            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-500 w-fit editable">2024</span>
+                        </div>
+                        <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                            Certified in standard BSL-1/BSL-2 wet laboratory hygiene, hazardous chemical disposal, autoclave safety protocols, and emergency chemical eyewash procedures.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="reveal-on-scroll rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-6 sm:p-8 shadow-sm is-visible">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <div class="lg:col-span-5 space-y-4">
+                    <div>
+                        <h2 class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400 editable">Say Hello</h2>
+                        <h3 class="text-xl font-bold text-stone-900 dark:text-white editable">Get In Touch</h3>
+                    </div>
+                    <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable">
+                        Looking for internship opportunities, lab assistant positions, study groups, or science club collaborations? Feel free to reach out!
+                    </p>
+
+                    <div class="space-y-3 pt-2 text-xs">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="mail" aria-hidden="true" class="lucide lucide-mail w-4 h-4"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-stone-400 uppercase">Student Email</p>
+                                <p class="font-medium editable" id="contact-email">your.name@university.edu</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="map-pin" aria-hidden="true" class="lucide lucide-map-pin w-4 h-4"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-stone-400 uppercase">Campus Location</p>
+                                <p class="font-medium editable">Science Quad, Life Sciences Building</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Functional Contact Form with Toast feedback -->
+                <form id="contact-form" class="lg:col-span-7 space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-medium text-stone-500 mb-1">Your Name</label>
+                            <input type="text" id="sender-name" required="" placeholder="Alex Rivera" class="w-full px-3 py-2 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-xs focus:outline-none focus:border-brand-600 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-stone-500 mb-1">Your Email</label>
+                            <input type="email" id="sender-email" required="" placeholder="alex@example.com" class="w-full px-3 py-2 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-xs focus:outline-none focus:border-brand-600 transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-stone-500 mb-1">Message</label>
+                        <textarea rows="3" required="" placeholder="Hello! I would like to connect regarding an internship / study group..." class="w-full px-3 py-2 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-xs focus:outline-none focus:border-brand-600 resize-none transition-colors"></textarea>
+                    </div>
+                    <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all">
+                        <span>Send Message</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="send" aria-hidden="true" class="lucide lucide-send w-3.5 h-3.5"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"></path><path d="m21.854 2.147-10.94 10.939"></path></svg>
+                    </button>
+                </form>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-stone-200 dark:border-stone-800 py-6 mb-16">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-stone-500">
+            <p class="editable">© 2026 Your Name · Life Sciences Student Portfolio</p>
+            <div class="flex items-center gap-4">
+                <a href="https://linkedin.com" target="_blank" rel="noreferrer" class="hover:text-brand-600 transition-colors">LinkedIn</a>
+                <a href="https://github.com" target="_blank" rel="noreferrer" class="hover:text-brand-600 transition-colors">GitHub</a>
+                <a href="#about" class="hover:text-brand-600 transition-colors">Top ↑</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Script -->
+    <script>
+        lucide.createIcons();
+
+        /* Ambient Botanical Spores / Pollen Animation Canvas */
+        (function initPollenSimulation() {
+            const canvas = document.getElementById('botanical-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width = (canvas.width = window.innerWidth);
+            let height = (canvas.height = window.innerHeight);
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const particles = [];
+            const count = Math.min(Math.floor(window.innerWidth / 30), 40);
+
+            let mouseX = width / 2;
+            let mouseY = height / 2;
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            class Spore {
+                constructor() {
+                    this.reset(true);
+                }
+                reset(initial = false) {
+                    this.x = Math.random() * width;
+                    this.y = initial ? Math.random() * height : height + 10;
+                    this.radius = Math.random() * 2.2 + 0.8;
+                    this.baseSpeed = Math.random() * 0.45 + 0.2;
+                    this.drift = (Math.random() - 0.5) * 0.3;
+                    this.opacity = Math.random() * 0.35 + 0.15;
+                    this.angle = Math.random() * Math.PI * 2;
+                    this.angularSpeed = Math.random() * 0.02 + 0.005;
+                }
+                update() {
+                    this.angle += this.angularSpeed;
+                    this.y -= this.baseSpeed;
+                    this.x += Math.sin(this.angle) * 0.6 + this.drift;
+
+                    const dx = this.x - mouseX;
+                    const dy = this.y - mouseY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) {
+                        this.x += (dx / dist) * 0.8;
+                        this.y += (dy / dist) * 0.8;
+                    }
+
+                    if (this.y < -10 || this.x < -10 || this.x > width + 10) {
+                        this.reset();
+                    }
+                }
+                draw() {
+                    const isDark = document.documentElement.classList.contains('dark');
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = isDark
+                        ? `rgba(160, 205, 175, ${this.opacity * 0.9})`
+                        : `rgba(65, 123, 94, ${this.opacity})`;
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            for (let i = 0; i < count; i++) {
+                particles.push(new Spore());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+
+        /* Scroll-Reveal Intersection Observer */
+        const observerOptions = {
+            threshold: 0.12,
+            rootMargin: '0px 0px -40px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, observerOptions);
+
+        function observeRevealElements() {
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+        }
+        observeRevealElements();
+
+        // Toast feedback
+        let toastTimeout;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            const msgEl = document.getElementById('toast-message');
+            if (msgEl) msgEl.textContent = msg;
+            toast.classList.remove('-translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('-translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Botanical Color Palette Swapper
+        function setPalette(name) {
+            document.body.setAttribute('data-palette', name);
+            showToast(`Applied ${name.charAt(0).toUpperCase() + name.slice(1)} natural theme`);
+        }
+
+        // Profile Image updater
+        function updateProfileImage() {
+            const urlInput = document.getElementById('profile-url-input');
+            if (!urlInput) return;
+            const url = urlInput.value.trim();
+            if (url) {
+                const profileImg = document.getElementById('profile-img');
+                if (profileImg) profileImg.src = url;
+                showToast('Profile image updated');
+                urlInput.value = '';
+            }
+        }
+
+        // Update card image by input change
+        function updateCardImg(inputEl) {
+            const cardImg = inputEl?.closest('.project-card')?.querySelector('.card-img');
+            if (cardImg && inputEl.value.trim()) {
+                cardImg.src = inputEl.value.trim();
+                showToast('Card photo updated');
+            }
+        }
+
+        // Delete card helper
+        function removeCard(btn) {
+            const card = btn?.closest('.project-card');
+            if (!card) return;
+            card.style.transform = 'scale(0.9) opacity(0)';
+            card.style.transition = '0.25s all ease';
+            setTimeout(() => {
+                card.remove();
+                showToast('Item card removed');
+            }, 250);
+        }
+
+        // Delete activity card helper
+        function removeActivityCard(btn) {
+            const card = btn?.closest('.activity-card');
+            if (!card) return;
+            card.style.transform = 'scale(0.9) opacity(0)';
+            card.style.transition = '0.25s all ease';
+            setTimeout(() => {
+                card.remove();
+                showToast('Activity card removed');
+            }, 250);
+        }
+
+        // Add blank coursework / lab card
+        function addProjectCard() {
+            const grid = document.getElementById('projects-grid');
+            if (!grid) return;
+            const card = document.createElement('article');
+            card.className = "project-card interactive-card reveal-on-scroll is-visible group rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 overflow-hidden flex flex-col justify-between shadow-sm relative";
+            card.innerHTML = `
+                <button onclick="removeCard(this)" class="edit-only absolute top-2 right-2 z-10 w-7 h-7 rounded-lg bg-stone-900/80 text-stone-200 hover:text-red-400 flex items-center justify-center text-xs transition-colors" title="Delete card">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+                <div>
+                    <div class="relative h-44 overflow-hidden bg-stone-100 dark:bg-stone-800">
+                        <img 
+                            src="https://placehold.co/600x400/31624a/ffffff?text=Course+Lab" 
+                            alt="Project Cover" 
+                            class="w-full h-full object-cover card-img transition-transform duration-500 ease-out group-hover:scale-105"
+                        />
+                        <div class="edit-only absolute bottom-2 left-2 right-2">
+                            <input type="text" placeholder="Image URL..." class="w-full text-[10px] px-2 py-1 rounded bg-black/70 text-white border-0 outline-none backdrop-blur-sm" onchange="updateCardImg(this)">
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <p class="text-[11px] text-stone-500 dark:text-stone-400 mb-1 editable" contenteditable="true">Semester · Course Name</p>
+                        <h4 class="text-base font-bold mb-2 group-hover:text-brand-600 transition-colors editable" contenteditable="true">Experiment / Assignment Title</h4>
+                        <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable" contenteditable="true">
+                            Summarize the experiment, what organisms or reagents were tested, and what you learned from the results.
+                        </p>
+                    </div>
+                </div>
+                <div class="px-5 pb-5 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between text-xs">
+                    <span class="text-[11px] text-stone-500 editable" contenteditable="true">Lab Technique / Tag</span>
+                    <a href="#" class="font-semibold text-brand-600 dark:text-brand-400 hover:underline transition-colors editable" contenteditable="true">View Details →</a>
+                </div>
+            `;
+            grid.appendChild(card);
+            lucide.createIcons();
+            observeRevealElements();
+            showToast('New lab / assignment card added');
+        }
+
+        // Add blank activity card
+        function addActivityCard() {
+            const container = document.getElementById('activities-container');
+            if (!container) return;
+            const card = document.createElement('div');
+            card.className = "activity-card interactive-card reveal-on-scroll is-visible p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative group";
+            card.innerHTML = `
+                <button onclick="removeActivityCard(this)" class="edit-only absolute top-3 right-3 text-stone-400 hover:text-red-500 transition-colors" title="Delete activity">
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                </button>
+                <div class="w-9 h-9 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
+                    <i data-lucide="activity" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] uppercase font-semibold text-brand-600 dark:text-brand-400 tracking-wider editable" contenteditable="true">Category (Club / Sport / Volunteer)</span>
+                <h4 class="text-sm font-bold text-stone-900 dark:text-white mt-0.5 mb-1 editable" contenteditable="true">Activity or Club Name</h4>
+                <p class="text-xs text-stone-500 dark:text-stone-400 mb-2 editable" contenteditable="true">Your Role · Frequency</p>
+                <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable" contenteditable="true">
+                    Describe what you do in this organization, any events you organized, or skills gained.
+                </p>
+            `;
+            container.appendChild(card);
+            lucide.createIcons();
+            observeRevealElements();
+            showToast('New activity added');
+        }
+
+        // Add blank timeline item
+        function addTimelineItem() {
+            const container = document.getElementById('timeline-container');
+            if (!container) return;
+            const item = document.createElement('div');
+            item.className = "relative group reveal-on-scroll is-visible";
+            item.innerHTML = `
+                <span class="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-stone-300 dark:bg-stone-700 border-2 border-white dark:border-stone-900 group-hover:scale-125 transition-transform duration-300"></span>
+                <div class="interactive-card p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative">
+                    <button onclick="removeTimelineItem(this)" class="edit-only absolute top-3 right-3 text-stone-400 hover:text-red-500 transition-colors" title="Delete entry">
+                        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1.5">
+                        <h4 class="text-sm font-bold editable" contenteditable="true">Degree / Certificate · <span class="text-brand-600 dark:text-brand-400">School or Institution</span></h4>
+                        <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-500 w-fit editable" contenteditable="true">Years</span>
+                    </div>
+                    <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed editable" contenteditable="true">
+                        Add key achievements, coursework, certificates, or grades here.
+                    </p>
+                </div>
+            `;
+            container.appendChild(item);
+            lucide.createIcons();
+            observeRevealElements();
+            showToast('New timeline milestone added');
+        }
+
+        function removeTimelineItem(btn) {
+            const item = btn?.closest('.relative.group');
+            if (!item) return;
+            item.style.transform = 'scale(0.9) opacity(0)';
+            item.style.transition = '0.25s all ease';
+            setTimeout(() => {
+                item.remove();
+                showToast('Timeline entry deleted');
+            }, 250);
+        }
+
+        // Clear all placeholders to start completely fresh
+        const resetBtn = document.getElementById('reset-btn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                document.querySelectorAll('.editable').forEach(el => {
+                    el.textContent = ' ';
+                });
+                showToast('Cleared all placeholder text');
+            });
+        }
+
+        // Export ready-to-use clean HTML
+        const exportBtn = document.getElementById('export-html-btn');
+        if (exportBtn) {
+            exportBtn.addEventListener('click', () => {
+                const clone = document.documentElement.cloneNode(true);
+                const floatingBar = clone.querySelector('aside');
+                if (floatingBar) floatingBar.remove();
+                clone.querySelectorAll('.edit-only').forEach(el => el.remove());
+                clone.querySelectorAll('[contenteditable]').forEach(el => {
+                    el.removeAttribute('contenteditable');
+                });
+                const bodyEl = clone.querySelector('body');
+                if (bodyEl) bodyEl.classList.remove('edit-mode');
+                clone.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                    el.classList.add('is-visible');
+                });
+                const fullHtml = "<!DOCTYPE html>\n" + clone.outerHTML;
+                const blob = new Blob([fullHtml], { type: 'text/html' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'life-sciences-student-portfolio.html';
+                link.click();
+                URL.revokeObjectURL(link.href);
+                showToast('Exported clean student portfolio HTML!');
+            });
+        }
+
+        // Copy email helper
+        const copyEmailBtn = document.getElementById('copy-email-btn');
+        if (copyEmailBtn) {
+            copyEmailBtn.addEventListener('click', () => {
+                const emailEl = document.getElementById('hero-email');
+                const email = emailEl ? emailEl.textContent.trim() : '';
+                if (!email) return;
+                const temp = document.createElement('textarea');
+                temp.value = email;
+                document.body.appendChild(temp);
+                temp.select();
+                document.execCommand('copy');
+                document.body.removeChild(temp);
+                showToast(`Copied ${email} to clipboard!`);
+            });
+        }
+
+        // Theme Toggle
+        const themeBtn = document.getElementById('theme-toggle');
+        const iconLight = document.getElementById('theme-icon-light');
+        const iconDark = document.getElementById('theme-icon-dark');
+
+        if (themeBtn) {
+            themeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const isDark = document.documentElement.classList.toggle('dark');
+                if (iconLight) iconLight.style.display = isDark ? 'block' : 'none';
+                if (iconDark) iconDark.style.display = isDark ? 'none' : 'block';
+                showToast(isDark ? 'Switched to Dark mode' : 'Switched to Light mode');
+            });
+        }
+
+        // Contact form mock submit
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const nameEl = document.getElementById('sender-name');
+                const name = nameEl ? nameEl.value : 'friend';
+                showToast(`Thanks ${name}, message sent!`);
+                e.target.reset();
+            });
+        }
+    </script>
+</body></html>
