@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avik Makal · Life Sciences Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: 'var(--brand-50, #f3f7f4)',
+                            100: 'var(--brand-100, #e2ece5)',
+                            200: 'var(--brand-200, #c7dbce)',
+                            400: 'var(--brand-400, #60967a)',
+                            500: 'var(--brand-500, #417b5e)',
+                            600: 'var(--brand-600, #31624a)',
+                            700: 'var(--brand-700, #264e3b)',
+                            800: 'var(--brand-800, #1f3f30)',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --brand-50: #faf4f1;
+            --brand-100: #f3e6e0;
+            --brand-200: #e6cbbe;
+            --brand-400: #af6b53;
+            --brand-500: #934e38;
+            --brand-600: #7c3e2b;
+            --brand-700: #633020;
+            --brand-800: #1f3f30;
+        }
+
+        /* Earthy Theme Presets */
+        body[data-palette="sage"] {
+            --brand-50: #f3f7f4;
+            --brand-100: #e2ece5;
+            --brand-200: #c7dbce;
+            --brand-400: #60967a;
+            --brand-500: #417b5e;
+            --brand-600: #31624a;
+            --brand-700: #264e3b;
+        }
+        body[data-palette="olive"] {
+            --brand-50: #f6f7f0;
+            --brand-100: #eaeecd;
+            --brand-200: #d6dda2;
+            --brand-400: #889647;
+            --brand-500: #6d7b32;
+            --brand-600: #556223;
+            --brand-700: #424e18;
+        }
+        body[data-palette="moss"] {
+            --brand-50: #f2f6f2;
+            --brand-100: #e0ece0;
+            --brand-200: #bfd8bf;
+            --brand-400: #548b59;
+            --brand-500: #3a6f40;
+            --brand-600: #29552f;
+            --brand-700: #1f4224;
+        }
+        body[data-palette="terracotta"] {
+            --brand-50: #faf4f1;
+            --brand-100: #f3e6e0;
+            --brand-200: #e6cbbe;
+            --brand-400: #af6b53;
+            --brand-500: #934e38;
+            --brand-600: #7c3e2b;
+            --brand-700: #633020;
+        }
+
+        /* Smooth reveal animations */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+            will-change: opacity, transform;
+        }
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered delay helpers */
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* Gentle botanical pulse & float animations */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-7px) rotate(1.5deg); }
+        }
+        @keyframes floatBadge {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+        }
+        @keyframes gentleGlow {
+            0%, 100% { box-shadow: 0 4px 20px -2px rgba(124, 62, 43, 0.15); }
+            50% { box-shadow: 0 8px 25px 2px rgba(124, 62, 43, 0.28); }
+        }
+
+        .animate-float-slow {
+            animation: floatSlow 6s ease-in-out infinite;
+        }
+        .animate-float-badge {
+            animation: floatBadge 3.5s ease-in-out infinite;
+        }
+        .animate-glow-soft {
+            animation: gentleGlow 4s ease-in-out infinite;
+        }
+
+        /* Card interactive hover physics */
+        .interactive-card {
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.25s ease;
+        }
+        .interactive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 30px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--brand-400);
+        }
+        .dark .interactive-card:hover {
+            box-shadow: 0 16px 30px -10px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--brand-400);
+        }
+
+        /* Visual edit styling */
+        .editable {
+            transition: background 0.15s ease, box-shadow 0.15s ease;
+            outline: none;
+            border-radius: 4px;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Background Spores Canvas */
+        #botanical-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.55;
+        }
+    </style>
+</head>
+<body data-palette="terracotta" class="bg-[#faf8f5] text-stone-800 dark:bg-stone-950 dark:text-stone-100 font-sans antialiased transition-colors duration-300 selection:bg-brand-600 selection:text-white relative">
+
+    <!-- Ambient Spores Particle Background Canvas -->
+    <canvas id="botanical-canvas"></canvas>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed top-5 right-5 z-50 transform transition-all duration-300 pointer-events-none flex items-center gap-3 bg-stone-900 text-stone-50 px-4 py-2.5 rounded-xl shadow-lg border border-stone-700 text-xs -translate-y-20 opacity-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check w-4 h-4 text-brand-400"><path d="M20 6 9 17l-5-5"></path></svg>
+        <span id="toast-message">Notification</span>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 right-0 z-40 glass-nav bg-[#faf8f5]/90 dark:bg-stone-950/90 border-b border-stone-200 dark:border-stone-800 transition-colors">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2 text-stone-900 dark:text-stone-100 font-bold group">
+                <span class="w-7 h-7 rounded-lg bg-brand-600 text-white flex items-center justify-center text-xs group-hover:rotate-12 transition-transform duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20"></path><path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13"></path></svg>
+                </span>
+                <span id="nav-brand-name">Avik Makal</span>
+                <span class="text-xs font-normal text-stone-500" id="nav-brand-title">| Life Sciences</span>
+            </a>
+
+            <!-- Desktop Links -->
+            <nav class="hidden md:flex items-center gap-6 text-xs font-medium text-stone-600 dark:text-stone-300">
+                <a href="#about" class="hover:text-brand-600 transition-colors">About</a>
+                <a href="#competencies" class="hover:text-brand-600 transition-colors">Skills</a>
+                <a href="#coursework-projects" class="hover:text-brand-600 transition-colors">Coursework</a>
+                <a href="#activities" class="hover:text-brand-600 transition-colors">Activities</a>
+                <a href="#experience" class="hover:text-brand-600 transition-colors">Education</a>
+                <a href="#contact" class="hover:text-brand-600 transition-colors">Contact</a>
+            </nav>
+
+            <div class="flex items-center gap-2">
+                <button id="theme-toggle" class="p-2 rounded-xl text-stone-600 dark:text-stone-300 hover:bg-stone-200/50 dark:hover:bg-stone-800 active:rotate-45 transition-transform" title="Toggle Theme">
+                    <span id="theme-icon-light" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-amber-400"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+                    </span>
+                    <span id="theme-icon-dark" style="display: block;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-stone-700 dark:text-stone-300"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path></svg>
+                    </span>
+                </button>
+                <a href="#contact" class="hidden sm:inline-flex items-center px-3.5 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-medium transition-all hover:shadow-md hover:-translate-y-0.5">
+                    Contact
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-28 pb-32 space-y-24">
+
+        <!-- HERO SECTION -->
+        <section id="about" class="reveal-on-scroll flex flex-col-reverse lg:flex-row items-center justify-between gap-10 is-visible">
+            <!-- Left Info -->
+            <div class="w-full lg:w-3/5 space-y-5">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100/70 dark:bg-brand-900/30 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-medium animate-float-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg>
+                    <span id="hero-tagline">Undergraduate Student · Life Sciences</span>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-stone-900 dark:text-white leading-tight">
+                    <span>Hi, I'm</span> 
+                    <span class="text-brand-600 dark:text-brand-400" id="hero-name">Avik Makal</span>.
+                </h1>
+
+                <p class="text-stone-600 dark:text-stone-400 text-sm sm:text-base leading-relaxed" id="hero-bio">
+                    I am an undergraduate student studying <strong class="text-stone-900 dark:text-stone-200">Life Sciences</strong> at <strong class="text-stone-900 dark:text-stone-200">Ramakrishna Mission Residential College</strong>. I am enthusiastic about cellular and molecular biology, ecology, and experimental physiology, and eager to expand my laboratory hands-on techniques, academic projects, and scientific collaborations.
+                </p>
+
+                <!-- Action CTA -->
+                <div class="flex flex-wrap items-center gap-3 pt-2">
+                    <a href="#coursework-projects" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-xs shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-1.5">
+                        <span>View Academic Work</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
+                    </a>
+                    <a href="https://github.com/Avik1233781" target="_blank" rel="noreferrer" class="px-4 py-2.5 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-xs text-stone-700 dark:text-stone-300 font-medium transition-all hover:-translate-y-0.5 flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-stone-800 dark:text-stone-200"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+                        <span>GitHub</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/avik-makal-252438413/?isSelfProfile=true" target="_blank" rel="noreferrer" class="px-4 py-2.5 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-xs text-stone-700 dark:text-stone-300 font-medium transition-all hover:-translate-y-0.5 flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-brand-600"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        <span>LinkedIn</span>
+                    </a>
+                    <button id="copy-email-btn" class="px-4 py-2.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-brand-500 text-xs text-stone-700 dark:text-stone-300 font-medium transition-all hover:-translate-y-0.5 flex items-center gap-2" title="Click to copy email">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-brand-600"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
+                        <span id="hero-email">tanusreemakal6@gmail.com</span>
+                    </button>
+                </div>
+
+                <!-- Custom stats -->
+                <div class="pt-4 grid grid-cols-3 gap-4 border-t border-stone-200 dark:border-stone-800 max-w-sm">
+                    <div class="transition-transform duration-300 hover:translate-x-1">
+                        <p class="text-xl font-bold text-stone-900 dark:text-white">B.Sc.</p>
+                        <p class="text-[11px] text-stone-500">Life Sciences</p>
+                    </div>
+                    <div class="transition-transform duration-300 hover:translate-x-1">
+                        <p class="text-xl font-bold text-stone-900 dark:text-white">RKM</p>
+                        <p class="text-[11px] text-stone-500">Residential College</p>
+                    </div>
+                    <div class="transition-transform duration-300 hover:translate-x-1">
+                        <p class="text-xl font-bold text-stone-900 dark:text-white">8+</p>
+                        <p class="text-[11px] text-stone-500">Lab Modules</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Profile / Specimen Photo Card (Locked Profile Picture) -->
+            <div class="w-full sm:w-64 lg:w-72 flex flex-col items-center">
+                <div class="relative group">
+                    <div class="animate-float-slow animate-glow-soft relative w-56 h-64 sm:w-64 sm:h-72 rounded-2xl overflow-hidden bg-stone-200 dark:bg-stone-800 border-2 border-brand-200 dark:border-brand-800 shadow-md">
+                        <!-- Profile Image Element -->
+                        <img id="profile-img" 
+                             src="https://img.sanishtech.com/u/22965750e7ce087644c2d7f75dcd0539.png" 
+                             onerror="this.onerror=null; this.src='profile.jpg';" 
+                             alt="Avik Makal" 
+                             width="1254"
+                             height="1254"
+                             loading="lazy"
+                             class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none select-none">
+
+                        <!-- Badge caption -->
+                        <div class="absolute bottom-3 left-3 right-3 glass-nav bg-white/95 dark:bg-stone-900/95 p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 transition-transform duration-300 group-hover:-translate-y-1">
+                            <p class="text-xs font-semibold" id="profile-caption-title">Avik Makal</p>
+                            <p class="text-[10px] text-stone-500" id="profile-caption-sub">Ramakrishna Mission Residential College</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STUDENT SKILLS & LAB TECHNIQUES -->
+        <section id="competencies" class="reveal-on-scroll space-y-6 is-visible">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">Academic Toolkit</h2>
+                    <h3 class="text-2xl font-bold text-stone-900 dark:text-white">Core Courses &amp; Practical Skills</h3>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="competencies-container">
+                <!-- Competency 1 -->
+                <div class="interactive-card reveal-on-scroll delay-100 p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative group is-visible">
+                    <div class="w-8 h-8 rounded-lg bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M6 18h8"></path><path d="M3 22h18"></path><path d="M14 22a7 7 0 1 0 0-14h-1"></path><path d="M9 14h2"></path><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"></path><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path></svg>
+                    </div>
+                    <h4 class="text-sm font-bold">Undergrad Lab Practicals</h4>
+                    <p class="text-xs text-stone-500 dark:text-stone-400 mt-1 mb-3">Hands-on coursework techniques practiced in weekly college lab sessions.</p>
+                    <div class="flex flex-wrap gap-1.5 tags-list">
+                        <span class="px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Compound Microscopy</span>
+                        <span class="px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Gram Staining</span>
+                        <span class="px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Pipetting &amp; Serial Dilution</span>
+                        <span class="px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Agar Plate Inoculation</span>
+                    </div>
+                </div>
+
+                <!-- Competency 2 -->
+                <div class="interactive-card reveal-on-scroll delay-200 p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative group is-visible">
+                    <div class="w-8 h-8 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M12 5v16"></path><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"></path></svg>
+                    </div>
+                    <h4 class="text-sm font-bold">Key Course Modules</h4>
+                    <p class="text-xs text-stone-500 dark:text-stone-400 mt-1 mb-3">Core lecture subjects studied in the Life Sciences curriculum.</p>
+                    <div class="flex flex-wrap gap-1.5 tags-list">
+                        <span class="px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">General Genetics</span>
+                        <span class="px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Plant &amp; Animal Physiology</span>
+                        <span class="px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Ecology &amp; Evolution</span>
+                        <span class="px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Introductory Biochemistry</span>
+                    </div>
+                </div>
+
+                <!-- Competency 3 -->
+                <div class="interactive-card reveal-on-scroll delay-300 p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative group is-visible">
+                    <div class="w-8 h-8 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z"></path><path d="M20.054 15.987H3.946"></path></svg>
+                    </div>
+                    <h4 class="text-sm font-bold">Software &amp; Analysis</h4>
+                    <p class="text-xs text-stone-500 dark:text-stone-400 mt-1 mb-3">Tools used for lab report preparation, data plotting, and presentations.</p>
+                    <div class="flex flex-wrap gap-1.5 tags-list">
+                        <span class="px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Excel (Graphing &amp; Stats)</span>
+                        <span class="px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">NCBI / PubMed Searching</span>
+                        <span class="px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Lab Notebook Documentation</span>
+                        <span class="px-2 py-0.5 text-[11px] rounded bg-stone-100 dark:bg-stone-800 transition-colors hover:bg-brand-100 dark:hover:bg-brand-900/40">Scientific Presentations</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COURSEWORK, LAB PRACTICALS & CLASS PROJECTS -->
+        <section id="coursework-projects" class="reveal-on-scroll space-y-6 is-visible">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+                <div>
+                    <h2 class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">Studies</h2>
+                    <h3 class="text-2xl font-bold text-stone-900 dark:text-white">Coursework &amp; Lab Experiments</h3>
+                </div>
+            </div>
+
+            <!-- Dynamic Project Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="projects-grid">
+
+                <!-- Card 1 -->
+                <article class="project-card interactive-card reveal-on-scroll delay-100 group rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 overflow-hidden flex flex-col justify-between shadow-sm relative is-visible">
+                    <div>
+                        <div class="relative h-44 overflow-hidden bg-stone-100 dark:bg-stone-800">
+                            <img src="https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&amp;fit=crop&amp;w=700&amp;q=80" onerror="this.src='https://placehold.co/600x400/31624a/ffffff?text=Lab+Practical'" alt="Practical experiment" class="w-full h-full object-cover card-img transition-transform duration-500 ease-out group-hover:scale-105">
+                        </div>
+                        <div class="p-5">
+                            <p class="text-[11px] text-stone-500 dark:text-stone-400 mb-1">Semester 3 · Botany Practical</p>
+                            <h4 class="text-base font-bold mb-2 group-hover:text-brand-600 transition-colors">Plant Tissue Anatomy &amp; Staining</h4>
+                            <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                                Prepared thin cross-sections of monocot and dicot stems, applied Safranin-Fast Green double staining, and documented vascular bundle arrangements under 400x magnification.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-5 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between text-xs">
+                        <span class="text-[11px] text-stone-500">Course Lab Module</span>
+                        <span class="font-semibold text-brand-600 dark:text-brand-400">Grade: A</span>
+                    </div>
+                </article>
+
+                <!-- Card 2 -->
+                <article class="project-card interactive-card reveal-on-scroll delay-200 group rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 overflow-hidden flex flex-col justify-between shadow-sm relative is-visible">
+                    <div>
+                        <div class="relative h-44 overflow-hidden bg-stone-100 dark:bg-stone-800">
+                            <img src="https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&amp;fit=crop&amp;w=700&amp;q=80" onerror="this.src='https://placehold.co/600x400/31624a/ffffff?text=Course+Poster'" alt="Poster assignment" class="w-full h-full object-cover card-img transition-transform duration-500 ease-out group-hover:scale-105">
+                        </div>
+                        <div class="p-5">
+                            <p class="text-[11px] text-stone-500 dark:text-stone-400 mb-1">Semester 2 · Genetics Term Paper</p>
+                            <h4 class="text-base font-bold mb-2 group-hover:text-brand-600 transition-colors">Mendelian Ratios in Drosophila</h4>
+                            <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                                Conducted fruit fly sorting for eye color and wing mutations, counted F1/F2 generations, and executed a Chi-square goodness-of-fit test to verify 3:1 phenotypic ratios.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-5 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between text-xs">
+                        <span class="text-[11px] text-stone-500">Genetics Lab Report</span>
+                        <a href="#" class="font-semibold text-brand-600 dark:text-brand-400 hover:underline transition-colors">View PDF Report →</a>
+                    </div>
+                </article>
+
+                <!-- Card 3 -->
+                <article class="project-card interactive-card reveal-on-scroll delay-300 group rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 overflow-hidden flex flex-col justify-between shadow-sm relative is-visible">
+                    <div>
+                        <div class="relative h-44 overflow-hidden bg-stone-100 dark:bg-stone-800">
+                            <img src="https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&amp;fit=crop&amp;w=700&amp;q=80" onerror="this.src='https://placehold.co/600x400/31624a/ffffff?text=Field+Trip'" alt="Field excursion" class="w-full h-full object-cover card-img transition-transform duration-500 ease-out group-hover:scale-105">
+                        </div>
+                        <div class="p-5">
+                            <p class="text-[11px] text-stone-500 dark:text-stone-400 mb-1">Semester 1 · Ecology Excursion</p>
+                            <h4 class="text-base font-bold mb-2 group-hover:text-brand-600 transition-colors">Pond Water Biodiversity Survey</h4>
+                            <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                                Sampled local freshwater ponds, measured dissolved oxygen and pH, and used dichotomous keys to categorize microinvertebrates including Daphnia, Cyclops, and rotifers.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-5 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between text-xs">
+                        <span class="text-[11px] text-stone-500">Fieldwork Assignment</span>
+                        <a href="#" class="font-semibold text-brand-600 dark:text-brand-400 hover:underline transition-colors">View Photo Log →</a>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- STUDENT ACTIVITIES & EXTRACURRICULARS -->
+        <section id="activities" class="reveal-on-scroll space-y-6 is-visible">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">Campus Life</h2>
+                    <h3 class="text-2xl font-bold text-stone-900 dark:text-white">Activities, Clubs &amp; Volunteering</h3>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="activities-container">
+                <!-- Activity 1 -->
+                <div class="activity-card interactive-card reveal-on-scroll delay-100 p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative group is-visible">
+                    <div class="w-9 h-9 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"></path><path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"></path><path d="M5 21h14"></path></svg>
+                    </div>
+                    <span class="text-[10px] uppercase font-semibold text-brand-600 dark:text-brand-400 tracking-wider">Campus Club</span>
+                    <h4 class="text-sm font-bold text-stone-900 dark:text-white mt-0.5 mb-1">Life Sciences Student Society</h4>
+                    <p class="text-xs text-stone-500 dark:text-stone-400 mb-2">Events Coordinator &amp; Active Member</p>
+                    <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                        Helped organize university guest lectures from visiting professors, scheduled museum tours, and arranged peer study circles before final exams.
+                    </p>
+                </div>
+
+                <!-- Activity 2 -->
+                <div class="activity-card interactive-card reveal-on-scroll delay-200 p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative group is-visible">
+                    <div class="w-9 h-9 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L12 3l4 4.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.7 1.7H17Z"></path><path d="M12 22v-3"></path></svg>
+                    </div>
+                    <span class="text-[10px] uppercase font-semibold text-brand-600 dark:text-brand-400 tracking-wider">Volunteering</span>
+                    <h4 class="text-sm font-bold text-stone-900 dark:text-white mt-0.5 mb-1">Botanical Garden Docent Volunteer</h4>
+                    <p class="text-xs text-stone-500 dark:text-stone-400 mb-2">Weekend Guide · Local Nature Conservatory</p>
+                    <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                        Guided school visitors through medicinal herb collections, explained native plant adaptations, and helped maintain plant nursery beds.
+                    </p>
+                </div>
+
+                <!-- Activity 3 -->
+                <div class="activity-card interactive-card reveal-on-scroll delay-300 p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative group is-visible">
+                    <div class="w-9 h-9 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg>
+                    </div>
+                    <span class="text-[10px] uppercase font-semibold text-brand-600 dark:text-brand-400 tracking-wider">Competition</span>
+                    <h4 class="text-sm font-bold text-stone-900 dark:text-white mt-0.5 mb-1">Annual College Science Exhibition</h4>
+                    <p class="text-xs text-stone-500 dark:text-stone-400 mb-2">Participant · Team Poster Presentation</p>
+                    <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                        Presented a 3D model and interactive demonstration explaining photosynthetic light reactions to high school science students and campus visitors.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- EDUCATION & TIMELINE SECTION -->
+        <section id="experience" class="reveal-on-scroll space-y-6 is-visible">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">Journey</h2>
+                    <h3 class="text-2xl font-bold text-stone-900 dark:text-white">Education &amp; Credentials</h3>
+                </div>
+            </div>
+
+            <div class="relative border-l-2 border-stone-200 dark:border-stone-800 ml-4 space-y-6 pl-6" id="timeline-container">
+                
+                <!-- Entry 1 -->
+                <div class="relative group reveal-on-scroll is-visible">
+                    <span class="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-brand-600 border-2 border-white dark:border-stone-900 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="interactive-card p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1.5">
+                            <h4 class="text-sm font-bold">Bachelor of Science in Life Sciences · <span class="text-brand-600 dark:text-brand-400">Ramakrishna Mission Residential College</span></h4>
+                            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-500 w-fit">Enrolled</span>
+                        </div>
+                        <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                            Undergraduate curriculum focused on Cellular Biology, Genetics, Microbial Ecology, Biochemistry, and Practical Laboratory Methodology.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Entry 2 -->
+                <div class="relative group reveal-on-scroll delay-100 is-visible">
+                    <span class="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-stone-300 dark:bg-stone-700 border-2 border-white dark:border-stone-900 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="interactive-card p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1.5">
+                            <h4 class="text-sm font-bold">Higher Secondary Education (Science Stream) · <span class="text-brand-600 dark:text-brand-400">Science Studies</span></h4>
+                            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-500 w-fit">Completed</span>
+                        </div>
+                        <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                            Core foundation in Biology, Chemistry, Physics, and Mathematics with practical lab training and biological classification.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Entry 3 -->
+                <div class="relative group reveal-on-scroll delay-200 is-visible">
+                    <span class="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-stone-300 dark:bg-stone-700 border-2 border-white dark:border-stone-900 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="interactive-card p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm relative">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1.5">
+                            <h4 class="text-sm font-bold">Biosafety &amp; Good Laboratory Practices (GLP) · <span class="text-brand-600 dark:text-brand-400">Institutional Practical Training</span></h4>
+                            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-500 w-fit">Certified</span>
+                        </div>
+                        <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                            Certified in wet laboratory safety protocols, specimen handling, micropipetting, sterile autoclaving procedures, and hazardous reagent storage.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="reveal-on-scroll rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-6 sm:p-8 shadow-sm is-visible">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <div class="lg:col-span-5 space-y-4">
+                    <div>
+                        <h2 class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">Say Hello</h2>
+                        <h3 class="text-xl font-bold text-stone-900 dark:text-white">Get In Touch</h3>
+                    </div>
+                    <p class="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                        Interested in scientific collaborations, academic internships, laboratory assistance, or study group projects? Feel free to reach out directly:
+                    </p>
+
+                    <div class="space-y-3 pt-2 text-xs">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-stone-400 uppercase">Direct Email</p>
+                                <a href="mailto:tanusreemakal6@gmail.com" class="font-medium text-brand-600 dark:text-brand-400 hover:underline">tanusreemakal6@gmail.com</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-stone-400 uppercase">Phone / Contact</p>
+                                <a href="tel:+918910448245" class="font-medium text-stone-800 dark:text-stone-200 hover:underline">+91 8910448245</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-stone-400 uppercase">College / Campus</p>
+                                <p class="font-medium">Ramakrishna Mission Residential College</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Functional Contact Form with Toast feedback -->
+                <form id="contact-form" class="lg:col-span-7 space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-medium text-stone-500 mb-1">Your Name</label>
+                            <input type="text" id="sender-name" required="" placeholder="Dr. / Prof. / Student Name" class="w-full px-3 py-2 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-xs focus:outline-none focus:border-brand-600 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-stone-500 mb-1">Your Email</label>
+                            <input type="email" id="sender-email" required="" placeholder="name@domain.edu" class="w-full px-3 py-2 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-xs focus:outline-none focus:border-brand-600 transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-stone-500 mb-1">Message</label>
+                        <textarea rows="3" required="" placeholder="Hello Avik! I would like to connect with you regarding..." class="w-full px-3 py-2 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-xs focus:outline-none focus:border-brand-600 resize-none transition-colors"></textarea>
+                    </div>
+                    <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all">
+                        <span>Send Message</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"></path><path d="m21.854 2.147-10.94 10.939"></path></svg>
+                    </button>
+                </form>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-stone-200 dark:border-stone-800 py-6 mb-16">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-stone-500">
+            <p>© 2026 Avik Makal · Ramakrishna Mission Residential College</p>
+            <div class="flex items-center gap-4">
+                <a href="https://linkedin.com/in/avik-makal-252438413/?isSelfProfile=true" target="_blank" rel="noreferrer" class="hover:text-brand-600 transition-colors">LinkedIn</a>
+                <a href="https://github.com/Avik1233781" target="_blank" rel="noreferrer" class="hover:text-brand-600 transition-colors">GitHub</a>
+                <a href="#about" class="hover:text-brand-600 transition-colors">Top ↑</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Script -->
+    <script>
+        // Init Lucide Icons if available
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
+
+        /* Ambient Botanical Spores / Pollen Animation Canvas */
+        (function initPollenSimulation() {
+            const canvas = document.getElementById('botanical-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width = (canvas.width = window.innerWidth);
+            let height = (canvas.height = window.innerHeight);
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const particles = [];
+            const count = Math.min(Math.floor(window.innerWidth / 30), 40);
+
+            let mouseX = width / 2;
+            let mouseY = height / 2;
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            class Spore {
+                constructor() {
+                    this.reset(true);
+                }
+                reset(initial = false) {
+                    this.x = Math.random() * width;
+                    this.y = initial ? Math.random() * height : height + 10;
+                    this.radius = Math.random() * 2.2 + 0.8;
+                    this.baseSpeed = Math.random() * 0.45 + 0.2;
+                    this.drift = (Math.random() - 0.5) * 0.3;
+                    this.opacity = Math.random() * 0.35 + 0.15;
+                    this.angle = Math.random() * Math.PI * 2;
+                    this.angularSpeed = Math.random() * 0.02 + 0.005;
+                }
+                update() {
+                    this.angle += this.angularSpeed;
+                    this.y -= this.baseSpeed;
+                    this.x += Math.sin(this.angle) * 0.6 + this.drift;
+
+                    const dx = this.x - mouseX;
+                    const dy = this.y - mouseY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) {
+                        this.x += (dx / dist) * 0.8;
+                        this.y += (dy / dist) * 0.8;
+                    }
+
+                    if (this.y < -10 || this.x < -10 || this.x > width + 10) {
+                        this.reset();
+                    }
+                }
+                draw() {
+                    const isDark = document.documentElement.classList.contains('dark');
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = isDark
+                        ? `rgba(226, 203, 190, ${this.opacity * 0.8})`
+                        : `rgba(124, 62, 43, ${this.opacity * 0.9})`;
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            for (let i = 0; i < count; i++) {
+                particles.push(new Spore());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+
+        /* Scroll-Reveal Intersection Observer */
+        const observerOptions = {
+            threshold: 0.12,
+            rootMargin: '0px 0px -40px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, observerOptions);
+
+        function observeRevealElements() {
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+        }
+        observeRevealElements();
+
+        /* Notification Toast */
+        let toastTimeout;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            const msgEl = document.getElementById('toast-message');
+            if (msgEl) msgEl.textContent = msg;
+            toast.classList.remove('-translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('-translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        /* Email copy helper */
+        const copyEmailBtn = document.getElementById('copy-email-btn');
+        if (copyEmailBtn) {
+            copyEmailBtn.addEventListener('click', () => {
+                const emailEl = document.getElementById('hero-email');
+                const email = emailEl ? emailEl.textContent.trim() : 'tanusreemakal6@gmail.com';
+                const temp = document.createElement('textarea');
+                temp.value = email;
+                document.body.appendChild(temp);
+                temp.select();
+                document.execCommand('copy');
+                document.body.removeChild(temp);
+                showToast(`Copied ${email} to clipboard!`);
+            });
+        }
+
+        /* Light / Dark Theme Switcher */
+        const themeBtn = document.getElementById('theme-toggle');
+        const iconLight = document.getElementById('theme-icon-light');
+        const iconDark = document.getElementById('theme-icon-dark');
+
+        if (themeBtn) {
+            themeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const isDark = document.documentElement.classList.toggle('dark');
+                if (iconLight) iconLight.style.display = isDark ? 'block' : 'none';
+                if (iconDark) iconDark.style.display = isDark ? 'none' : 'block';
+                localStorage.setItem('portfolio_theme', isDark ? 'dark' : 'light');
+                showToast(isDark ? 'Switched to Dark mode' : 'Switched to Light mode');
+            });
+        }
+
+        // Contact form mock submission
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const nameEl = document.getElementById('sender-name');
+                const name = nameEl && nameEl.value.trim() ? nameEl.value.trim() : 'there';
+                showToast(`Thanks ${name}, message sent!`);
+                e.target.reset();
+            });
+        }
+    </script>
+</body>
+</html>
